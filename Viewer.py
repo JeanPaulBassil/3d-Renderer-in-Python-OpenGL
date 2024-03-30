@@ -2,6 +2,7 @@
 
 import OpenGL.GL as gl
 import OpenGL.GLUT as glut
+import OpenGL.GLU as glu
 import numpy as np
 
 
@@ -88,6 +89,46 @@ class Viewer(object):
         """ Main loop of the viewer """
         glut.glutMainLoop()
 
+    def render(self):
+        self.init_view()
+
+        gl.glEnable(gl.GL_LIGHTING)  # Enable lighting
+        gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)  # Clear the color and depth buffer
+
+        gl.glMatrixMode(gl.GL_MODELVIEW)  # Set the model view matrix
+        gl.glPushMatrix()  # Push the current matrix onto the stack
+        gl.glLoadIdentity()  # Load the identity matrix
+        # loc = self.interaction.translation  # Get the translation
+        # gl.glTranslated(lo[0], loc[1], loc[2])  # Translate the scene based on the translation
+        # gl.glMultMatrixf(self.interaction.trackball.matrix) # Multiply the current matrix by the trackball matrix
+
+        current_model_view = np.array(gl.glGetFloatv(gl.GL_MODELVIEW_MATRIX)) # Get the current model view matrix
+        # self.model_view = np.transpose(current_model_view) # Transpose the current model view matrix
+        # self.inverse_model_view = inv(np.transpose(current_model_view)) # Calculate the inverse model view matrix
+
+        # self.scene.render()  # Render the scene
+
+        gl.glDisable(gl.GL_LIGHTING)  # Disable lighting
+        gl.glCallList(gl.GL_OBJECT_PLANE) # Call the object plane
+        gl.glPopMatrix()  # Pop the current matrix from the stack
+
+        gl.glFlush()  # Flush the OpenGL pipeline to the viewport
+
+
+    def init_view(self):
+        """ Initializes the view """
+        xSize, ySize = glut.glutGet(glut.GLUT_WINDOW_WIDTH), glut.glutGet(
+            glut.GLUT_WINDOW_HEIGHT) # Get the window size
+        aspect_ratio = float(xSize) / float(ySize) # Calculate the aspect ratio
+
+        gl.glMatrixMode(gl.GL_PROJECTION) # Set the projection matrix
+        gl.glLoadIdentity() # Load the identity matrix
+
+        gl.glViewport(0, 0, xSize, ySize) # Set the viewport size to the window size
+        glu.gluPerspective(70, aspect_ratio, 0.1, 1000.0) # Set the perspective projection matrix
+        gl.glTranslated(0, 0, -15) # Translate the scene along the z-axis
+
+    
 
 if __name__ == "__main__":
     viewer = Viewer()
