@@ -6,7 +6,7 @@ import OpenGL.GLU as glu
 import numpy as np
 
 
-class Viewer(object):
+class Viewer():
     """ Viewer class which is responsible for rendering the scene and handling user interaction. """
 
     def __init__(self):
