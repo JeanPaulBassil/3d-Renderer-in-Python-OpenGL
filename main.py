@@ -4,7 +4,6 @@ This module initializes an OpenGL window and displays a blank screen.
 
 import OpenGL.GL as gl
 import OpenGL.GLUT as glut
-import OpenGL.GLU as glu
 
 w, h = 500, 500  # Width and height of the window
 
